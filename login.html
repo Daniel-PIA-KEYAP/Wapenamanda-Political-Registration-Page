@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Candidate Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1 { color: #2c3e50; }
+    .section { border: 1px solid #ccc; padding: 15px; margin-top: 20px; background: #fff; border-radius: 4px; max-width: 400px; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
+    button { margin-top: 16px; padding: 10px 24px; background: #2c3e50; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; }
+    button:hover { background: #1a252f; }
+    .error { color: red; margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Candidate Login</h1>
+  <div class="section">
+    <form action="login.php" method="POST">
+      <label>Email: <input type="email" name="email" required></label>
+      <label>Password: <input type="password" name="password" required></label>
+      <button type="submit">Log In</button>
+    </form>
+    <p id="loginError" class="error" style="display:none;">Invalid login credentials.</p>
+  </div>
+  <p><a href="candidate_register.html">New candidate? Register here &rarr;</a></p>
+
+  <script>
+    if (new URLSearchParams(window.location.search).get('error')) {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
