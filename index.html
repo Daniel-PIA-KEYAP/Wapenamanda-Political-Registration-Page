@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1, h2 { color: #2c3e50; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; max-width: 400px; padding: 6px; margin-top: 4px; box-sizing: border-box; }
+    .hidden { display: none; }
+    .section { border: 1px solid #ccc; padding: 15px; margin-top: 20px; background: #fff; border-radius: 4px; }
+    button[type="submit"] { margin-top: 20px; padding: 10px 30px; background: #2c3e50; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    button[type="submit"]:hover { background: #1a252f; }
+    #liveUpdates p { color: #27ae60; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Wapenamanda-Political-Registration-Group</h1>
+  <h2>Official Voter &amp; Candidate Support Registration Portal</h2>
+
+  <form id="registrationForm" action="register.php" method="POST" enctype="multipart/form-data">
+    <!-- Basic Info -->
+    <div class="section">
+      <h3>Main User Information</h3>
+      <label>Name: <input type="text" name="name" required></label>
+      <label>Surname: <input type="text" name="surname" required></label>
+      <label>Council Ward: <input type="text" name="ward" required></label>
+      <label>Constituency:
+        <select name="constituency" required>
+          <option value="">-- Select --</option>
+          <option value="Tsak">Tsak</option>
+          <option value="Wapenamanda">Wapenamanda</option>
+        </select>
+      </label>
+      <label>Tribe Name: <input type="text" name="tribe"></label>
+      <label>Phone: <input type="tel" name="phone"></label>
+      <label>Email: <input type="email" name="email"></label>
+      <label>Upload Image/ID: <input type="file" name="idImage" accept="image/*,.pdf"></label>
+      <label>Age: <input type="number" name="age" min="1" max="120"></label>
+      <label>Date of Birth: <input type="date" name="dob"></label>
+    </div>
+
+    <!-- Employment Section -->
+    <div class="section">
+      <h3>Employment Status</h3>
+      <label>
+        <select id="employmentStatus" name="employmentStatus">
+          <option value="">-- Select --</option>
+          <option value="employed">Employed</option>
+          <option value="selfEmployed">Self-Employed</option>
+          <option value="student">Student</option>
+          <option value="unemployed">Unemployed</option>
+        </select>
+      </label>
+
+      <div id="employmentDetails" class="hidden">
+        <label>Company/Government: <input type="text" name="company"></label>
+      </div>
+
+      <div id="studentDetails" class="hidden">
+        <label>Level of Study:
+          <select name="studyLevel">
+            <option value="primary">Primary</option>
+            <option value="high">High School</option>
+            <option value="college">College</option>
+            <option value="university">University</option>
+          </select>
+        </label>
+        <label>School Name: <input type="text" name="schoolName"></label>
+      </div>
+    </div>
+
+    <!-- Marital Status -->
+    <div class="section">
+      <h3>Marital Status</h3>
+      <label>
+        <select id="maritalStatus" name="maritalStatus">
+          <option value="">-- Select --</option>
+          <option value="single">Single</option>
+          <option value="married">Married</option>
+        </select>
+      </label>
+
+      <div id="spouseSection" class="hidden">
+        <h4>Spouse Registration</h4>
+        <label>Name: <input type="text" name="spouseName"></label>
+        <label>Surname: <input type="text" name="spouseSurname"></label>
+        <label>Council Ward: <input type="text" name="spouseWard"></label>
+        <label>Tribe Name: <input type="text" name="spouseTribe"></label>
+        <label>Phone: <input type="tel" name="spousePhone"></label>
+        <label>Email: <input type="email" name="spouseEmail"></label>
+        <label>Upload Image/ID: <input type="file" name="spouseIdImage" accept="image/*,.pdf"></label>
+        <label>Age: <input type="number" name="spouseAge" min="1" max="120"></label>
+        <label>Date of Birth: <input type="date" name="spouseDob"></label>
+      </div>
+
+      <div id="childrenSection" class="hidden">
+        <h4>Children Registration</h4>
+        <label>Number of Children: <input type="number" id="childrenCount" name="childrenCount" min="0"></label>
+        <div id="childrenForms"></div>
+      </div>
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="liveUpdates" class="section">
+    <h3>Live Updates</h3>
+    <p>No new registrations yet.</p>
+  </div>
+
+  <script>
+    // Employment toggle
+    document.getElementById('employmentStatus').addEventListener('change', function() {
+      document.getElementById('employmentDetails').classList.add('hidden');
+      document.getElementById('studentDetails').classList.add('hidden');
+      if (this.value === 'employed') {
+        document.getElementById('employmentDetails').classList.remove('hidden');
+      } else if (this.value === 'student') {
+        document.getElementById('studentDetails').classList.remove('hidden');
+      }
+    });
+
+    // Marital toggle
+    document.getElementById('maritalStatus').addEventListener('change', function() {
+      if (this.value === 'married') {
+        document.getElementById('spouseSection').classList.remove('hidden');
+        document.getElementById('childrenSection').classList.remove('hidden');
+      } else {
+        document.getElementById('spouseSection').classList.add('hidden');
+        document.getElementById('childrenSection').classList.add('hidden');
+      }
+    });
+
+    // Children dynamic forms
+    document.getElementById('childrenCount').addEventListener('input', function() {
+      const count = parseInt(this.value) || 0;
+      const container = document.getElementById('childrenForms');
+      container.innerHTML = '';
+      for (let i = 1; i <= count; i++) {
+        container.innerHTML += `
+          <div class="section">
+            <h5>Child ${i}</h5>
+            <label>Name: <input type="text" name="child${i}Name"></label>
+            <label>Surname: <input type="text" name="child${i}Surname"></label>
+            <label>Age: <input type="number" name="child${i}Age"></label>
+            <label>Date of Birth: <input type="date" name="child${i}Dob"></label>
+          </div>
+        `;
+      }
+    });
+
+    // Submit via AJAX and show live update
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch('register.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const liveUpdates = document.getElementById('liveUpdates');
+        if (data.status === 'success') {
+          liveUpdates.innerHTML = '<h3>Live Updates</h3><p>New user registered successfully!</p>';
+          document.getElementById('registrationForm').reset();
+          document.getElementById('employmentDetails').classList.add('hidden');
+          document.getElementById('studentDetails').classList.add('hidden');
+          document.getElementById('spouseSection').classList.add('hidden');
+          document.getElementById('childrenSection').classList.add('hidden');
+          document.getElementById('childrenForms').innerHTML = '';
+        } else {
+          liveUpdates.innerHTML = '<h3>Live Updates</h3><p style="color:red;">Error: ' + (data.message || 'Registration failed.') + '</p>';
+        }
+      })
+      .catch(() => {
+        document.getElementById('liveUpdates').innerHTML = '<h3>Live Updates</h3><p style="color:red;">Network error. Please try again.</p>';
+      });
+    });
+  </script>
+</body>
+</html>
